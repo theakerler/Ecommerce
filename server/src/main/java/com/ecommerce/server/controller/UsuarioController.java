@@ -38,7 +38,7 @@ public class UsuarioController {
 
 //    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN')")
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<?> getAdmins(@PathVariable Long id){
+    public ResponseEntity<?> showAdminById(@PathVariable Long id){
         Usuario usuario = usuarioService.getUsuario(id);
         if (usuario == null){
             return msg.NoGet();
