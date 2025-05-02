@@ -1,4 +1,4 @@
-# 🛍️ Proyecto eCommerce - React + Spring Boot
+# 🛍️ Proyecto eCommerce - React + Spring Boot y su aplicativo en kotlin
 
 Este es un proyecto completo de eCommerce que incluye un **frontend moderno** desarrollado en **React con Tailwind CSS**, y un **backend robusto** basado en **Spring Boot** con autenticación y conexión a base de datos **PostgreSQL**.
 
