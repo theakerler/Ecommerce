@@ -2,7 +2,6 @@ package com.ecommerce.server.model.entity.prenda;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.java.Log;
 
 @Data
 @Entity
