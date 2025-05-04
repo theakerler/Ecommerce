@@ -9,11 +9,13 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-@Table(name = "marca")
-public class Marca {
+@Table(name = "talla")
+public class Talla {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nom_marca", unique = true, nullable = false)
-    private String nomMarca;
+    @Column(name = "nom_talla", unique = true, nullable = false)
+    private String nomTalla;
+
 }

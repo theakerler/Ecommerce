@@ -9,7 +9,7 @@ public interface IMarcaService {
     List<Marca> getMarcas();
     Marca getMarca(Long id);
     Marca save(MarcaDto marcaDto);
-    void deleteTalla(Marca marca);
+    void deleteMarca(Marca marca);
     boolean existsById(Long id);
 
 }

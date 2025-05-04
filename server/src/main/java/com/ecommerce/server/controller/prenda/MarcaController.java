@@ -21,7 +21,7 @@ public class MarcaController {
     private Mensajes msg = new Mensajes();
 
     @GetMapping("/marcas")
-    public ResponseEntity<?> showAllTallas() {
+    public ResponseEntity<?> showAll() {
         List<Marca> getList = marcaService.getMarcas();
         if (getList.isEmpty()) {
             return msg.NoGet();
@@ -30,7 +30,7 @@ public class MarcaController {
     }
 
     @GetMapping("/marca/{id}")
-    public ResponseEntity<?> showTallaById(@PathVariable Long id) {
+    public ResponseEntity<?> showById(@PathVariable Long id) {
         Marca marca = marcaService.getMarca(id);
         if (marca == null) {
             return msg.NoGet();
@@ -78,7 +78,7 @@ public class MarcaController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try{
             Marca marcaDelete = marcaService.getMarca(id);
-            marcaService.deleteTalla(marcaDelete);
+            marcaService.deleteMarca(marcaDelete);
             return msg.Delete(marcaDelete);
         }catch (DataAccessException e){
             return  msg.Error(e);

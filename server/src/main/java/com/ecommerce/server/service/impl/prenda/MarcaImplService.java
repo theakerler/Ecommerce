@@ -26,6 +26,7 @@ public class MarcaImplService implements IMarcaService {
         return marcaDao.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
     public Marca save(MarcaDto marcaDto) {
         Marca marca = Marca.builder()
@@ -34,9 +35,9 @@ public class MarcaImplService implements IMarcaService {
                 .build();
         return marcaDao.save(marca);
     }
-
+    @Transactional
     @Override
-    public void deleteTalla(Marca marca) {
+    public void deleteMarca(Marca marca) {
         marcaDao.delete(marca);
     }
 
