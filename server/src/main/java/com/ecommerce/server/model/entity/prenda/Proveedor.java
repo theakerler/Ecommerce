@@ -2,7 +2,6 @@ package com.ecommerce.server.model.entity.prenda;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.java.Log;
 
 @Data
 @Entity
@@ -10,12 +9,12 @@ import lombok.extern.java.Log;
 @NoArgsConstructor
 @ToString
 @Builder
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "proveedor")
+public class Proveedor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "nom_categoria", unique = true, nullable = false)
-    private String nomCategoria;
+    @Column(name = "nom_proveedor", unique = true, nullable = false)
+    private String nomProveedor;
 }

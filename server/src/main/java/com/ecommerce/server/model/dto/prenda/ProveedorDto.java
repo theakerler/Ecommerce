@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class CategoriaDto {
+public class ProveedorDto {
     private Long id;
-    private String nomCategoria;
+    private String nomProveedor;
 }
