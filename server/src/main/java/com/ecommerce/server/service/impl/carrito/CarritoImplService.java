@@ -32,6 +32,7 @@ public class CarritoImplService implements ICarritoService {
         return (List) carritoDao.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Carrito getCarrito(Long id) {
         return carritoDao.findById(id).orElse(null);
@@ -83,7 +84,7 @@ public class CarritoImplService implements ICarritoService {
         return carritoDto;
     }
 
-
+    @Transactional
     @Override
     public void deleteCarrito(Carrito carrito) {
         carritoDao.delete(carrito);
