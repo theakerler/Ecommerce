@@ -9,18 +9,18 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.jwt.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -191,5 +191,93 @@ public class AuthController {
         }
     }
 
+
+
+    @GetMapping("/usuario-id")
+    public Long getUsuarioId() {
+        // Obtener el Authentication del SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new RuntimeException("Usuario no autenticado");
+        }
+
+        // Obtener el Principal
+        Object principal = authentication.getPrincipal();
+
+        Long userId;
+        if (principal instanceof OAuth2AuthenticatedPrincipal) {
+            // Manejo para OAuth2AuthenticatedPrincipal
+            OAuth2AuthenticatedPrincipal oauthPrincipal = (OAuth2AuthenticatedPrincipal) principal;
+            String username = oauthPrincipal.getAttribute("sub");
+            if (username == null) {
+                throw new RuntimeException("No se encontró el nombre de usuario en los claims del token");
+            }
+            Usuario usuario = usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+            userId = usuario.getId();
+        } else if (principal instanceof Jwt) {
+            // Manejo para Jwt
+            Jwt jwt = (Jwt) principal;
+            String username = jwt.getClaimAsString("sub");
+            if (username == null) {
+                throw new RuntimeException("No se encontró el nombre de usuario en los claims del token");
+            }
+            Usuario usuario = usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+            userId = usuario.getId();
+        } else if (principal instanceof String) {
+            // Manejo como respaldo si el principal es un String
+            String username = (String) principal;
+            if ("anonymousUser".equals(username)) {
+                throw new RuntimeException("Usuario no autenticado");
+            }
+            Usuario usuario = usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+            userId = usuario.getId();
+        } else {
+            throw new RuntimeException("Tipo de principal no soportado: " + principal.getClass().getName());
+        }
+
+        return userId;
+    }
+
+    @GetMapping("/usuario")
+    public Usuario getUsuario() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            throw new RuntimeException("Usuario no autenticado");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof OAuth2AuthenticatedPrincipal) {
+            OAuth2AuthenticatedPrincipal oauthPrincipal = (OAuth2AuthenticatedPrincipal) principal;
+            String username = oauthPrincipal.getAttribute("sub");
+            if (username == null) {
+                throw new RuntimeException("No se encontró el nombre de usuario en los claims del token");
+            }
+            return usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+        } else if (principal instanceof Jwt) {
+            Jwt jwt = (Jwt) principal;
+            String username = jwt.getClaimAsString("sub");
+            if (username == null) {
+                throw new RuntimeException("No se encontró el nombre de usuario en los claims del token");
+            }
+            return usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+        } else if (principal instanceof String) {
+            String username = (String) principal;
+            if ("anonymousUser".equals(username)) {
+                throw new RuntimeException("Usuario no autenticado");
+            }
+            return usuarioDao.findByNombreUsuario(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+        } else {
+            throw new RuntimeException("Tipo de principal no soportado: " + principal.getClass().getName());
+        }
+    }
 
 }

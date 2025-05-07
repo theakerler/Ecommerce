@@ -14,6 +14,7 @@ public class Talla {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
     @Column(name = "nom_talla", unique = true, nullable = false)
     private String nomTalla;

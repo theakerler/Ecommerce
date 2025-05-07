@@ -18,6 +18,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
     @Column(name = "nombre_usuario", unique = true, nullable = false)
     private String nombreUsuario;
@@ -25,8 +26,10 @@ public class Usuario {
     private String email;
     @Column(name = "contrasenia")
     private String contrasenia;
+
+    @Builder.Default
     @Column(name = "rol")
-    private String rol;
+    private String rol = "USER";
 
     @Builder.Default
     @Column(name = "activo")

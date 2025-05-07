@@ -1,5 +1,6 @@
 package com.ecommerce.server.controller;
 
+import com.ecommerce.server.model.dao.UsuarioDao;
 import com.ecommerce.server.model.dto.UsuarioDto;
 import com.ecommerce.server.model.entity.Usuario;
 import com.ecommerce.server.model.payload.Mensajes;
@@ -8,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
