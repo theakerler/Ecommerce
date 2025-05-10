@@ -1,5 +1,6 @@
 package com.ecommerce.server.service.prenda;
 
+import com.ecommerce.server.model.dto.descuento.PrendaConDescuentoResponseDto;
 import com.ecommerce.server.model.dto.prenda.PrendaDto;
 import com.ecommerce.server.model.entity.prenda.Prenda;
 
@@ -11,4 +12,5 @@ public interface IPrendaService {
     Prenda save(PrendaDto prendaDto);
     void deletePrenda(Prenda prenda);
     boolean existsById(Long id);
+    public List<PrendaConDescuentoResponseDto> obtenerPrendasConDescuentos();
 }

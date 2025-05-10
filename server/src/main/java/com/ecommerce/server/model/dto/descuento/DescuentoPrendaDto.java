@@ -10,9 +10,9 @@ import java.time.LocalDate;
 @Data
 @ToString
 @Builder
-public class DescuentroPrendaDto {
-    private int id;
-    private PrendaDto prendaDto;
+public class DescuentoPrendaDto {
+    private Long id;
+    private Long prendaId;
     private Double porcentaje;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;

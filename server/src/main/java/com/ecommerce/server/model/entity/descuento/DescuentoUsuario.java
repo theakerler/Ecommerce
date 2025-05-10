@@ -14,17 +14,17 @@ import java.time.LocalDate;
 @ToString
 @Builder
 @Table(name = "descuento_usuario")
-public class DescuentoPorUsuario {
+public class DescuentoUsuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "descuento_codigo_id", nullable = false)
     private DescuentoCodigo descuentoCodigo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 

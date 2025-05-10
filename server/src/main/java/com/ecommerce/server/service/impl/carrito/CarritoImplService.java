@@ -1,16 +1,12 @@
 package com.ecommerce.server.service.impl.carrito;
 
 import com.ecommerce.server.model.dao.carrito.CarritoDao;
-import com.ecommerce.server.model.dao.prenda.PrendaDao;
 import com.ecommerce.server.model.dto.carrito.CarritoDto;
 import com.ecommerce.server.model.dto.carrito.CarritoItemDto;
 import com.ecommerce.server.model.dto.carrito.CarritoRequestDto;
 import com.ecommerce.server.model.entity.carrito.Carrito;
-import com.ecommerce.server.model.entity.carrito.CarritoItem;
-import com.ecommerce.server.model.entity.prenda.Prenda;
 import com.ecommerce.server.service.carrito.ICarritoService;
 import com.ecommerce.server.service.prenda.IPrendaService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

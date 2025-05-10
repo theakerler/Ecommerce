@@ -1,5 +1,6 @@
 package com.ecommerce.server.controller.prenda;
 
+import com.ecommerce.server.model.dto.descuento.PrendaConDescuentoResponseDto;
 import com.ecommerce.server.model.dto.prenda.*;
 import com.ecommerce.server.model.entity.prenda.*;
 import com.ecommerce.server.model.payload.Mensajes;
@@ -151,4 +152,18 @@ public class PrendaController {
             return msg.Error(e);
         }
     }
+
+    @GetMapping("/prendas/con-descuentos")
+    public ResponseEntity<?> obtenerPrendasConDescuentos() {
+        try {
+            List<PrendaConDescuentoResponseDto> prendasConDescuentos = prendaService.obtenerPrendasConDescuentos();
+            if (prendasConDescuentos.isEmpty()) {
+                return msg.NoGet();
+            }
+            return msg.Get(prendasConDescuentos);
+        } catch (DataAccessException e) {
+            return msg.Error(e);
+        }
+    }
+
 }

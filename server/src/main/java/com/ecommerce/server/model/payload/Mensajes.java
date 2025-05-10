@@ -52,4 +52,5 @@ public class Mensajes {
     public ResponseEntity<?> Delete(Object object) {
         return  new ResponseEntity<>(object, HttpStatus.NO_CONTENT);
     }
+    public ResponseEntity<?> Personalizado(String Personalizado) {return mensaje(Personalizado, null, HttpStatus.OK);}
 }
