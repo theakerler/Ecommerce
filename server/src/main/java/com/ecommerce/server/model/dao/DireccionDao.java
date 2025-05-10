@@ -1,4 +1,7 @@
 package com.ecommerce.server.model.dao;
 
-public class DireccionDao {
+import com.ecommerce.server.model.entity.Direccion;
+import org.springframework.data.repository.CrudRepository;
+
+public interface DireccionDao extends CrudRepository<Direccion, Long> {
 }
