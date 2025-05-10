@@ -7,7 +7,10 @@ import lombok.ToString;
 @Data
 @ToString
 @Builder
-public class UsuarioDataClientDto {
+public class ReseniaRequestDto {
     private Long id;
-    private String nombreUsuario;
+    private Long prendaId;
+    private Long usuarioId;
+    private Integer calificacion;
+    private String comentario;
 }
