@@ -1,5 +1,6 @@
 package com.ecommerce.server.model.entity.envio;
 
+import com.ecommerce.server.model.entity.venta.Venta;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,9 +22,9 @@ public class Envio {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "venta_id", nullable = false)
-//    private Venta venta; // Relación con la entidad Venta (reemplaza ventasId)
+    @ManyToOne()
+    @JoinColumn(name = "venta_id", nullable = false)
+    private Venta venta; // Relación con la entidad Venta (reemplaza ventasId)
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "datos_personales_id", nullable = false)

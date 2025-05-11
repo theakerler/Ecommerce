@@ -30,7 +30,7 @@ public class Pago {
     private Double monto;
 
     @ManyToOne()
-    @JoinColumn(name = "metodo_id", nullable = false, referencedColumnName = "tipo_pago")
+    @JoinColumn(name = "metodo_id", nullable = false, referencedColumnName = "id")
     private MetodoPago metodoPago;
 
     @Column(name = "estado", length = 50, nullable = false)
