@@ -35,6 +35,7 @@ public class CarritoController {
                             .id(item.getId())
                             .prenda(item.getPrenda())
                             .cantidad(item.getCantidad())
+                            .precioUnitario(item.getPrecioUnitario())
                             .build())
                     .collect(Collectors.toList());
 
@@ -65,6 +66,7 @@ public class CarritoController {
                         .id(item.getId())
                         .prenda(item.getPrenda())
                         .cantidad(item.getCantidad())
+                        .precioUnitario(item.getPrecioUnitario())
                         .build())
                 .collect(Collectors.toList());
 

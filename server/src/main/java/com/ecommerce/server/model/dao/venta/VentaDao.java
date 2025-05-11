@@ -1,4 +1,7 @@
 package com.ecommerce.server.model.dao.venta;
 
-public interface VentaDao {
+import com.ecommerce.server.model.entity.venta.Venta;
+import org.springframework.data.repository.CrudRepository;
+
+public interface VentaDao extends CrudRepository<Venta, Long> {
 }

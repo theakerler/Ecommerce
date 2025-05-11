@@ -13,4 +13,5 @@ public class CarritoRequestDto {
     private Long id;
     private Long usuarioId;
     private String estado;
+    private Double precioUnitario;
 }

@@ -26,6 +26,9 @@ public class CarritoItem {
     @JoinColumn(name = "prenda_id")
     private Prenda prenda;
 
+    @Column(name = "precio_unitario")
+    private Double precioUnitario;
+
     @Column(name = "cantidad")
     private Integer cantidad;
 }

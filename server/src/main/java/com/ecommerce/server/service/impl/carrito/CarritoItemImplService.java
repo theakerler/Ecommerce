@@ -44,6 +44,7 @@ public class CarritoItemImplService implements ICarritoItemService {
                 .carritoId(carritoItemRequestDto.getCarritoId()) // Obtener el carritoId del DTO
                 .prenda(prenda)
                 .cantidad(carritoItemRequestDto.getCantidad())
+                .precioUnitario(carritoItemRequestDto.getPrecioUnitario())
                 .build();
 
         // Guardar el carritoItem en la base de datos

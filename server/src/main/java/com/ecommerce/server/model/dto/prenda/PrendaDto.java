@@ -22,7 +22,7 @@ public class PrendaDto {
     private TallaDto tallaDto;
     private CategoriaDto categoriaDto;
     private ProveedorDto proveedorDto;
-    private BigDecimal precio;
+    private Double precio;
     private Integer stock;
     private Boolean activo;
     private LocalDateTime createdAt;

@@ -48,7 +48,7 @@ public class Prenda {
     private Proveedor proveedor;
 
     @Column(name = "precio", nullable = false)
-    private BigDecimal precio;
+    private Double precio;
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
