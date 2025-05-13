@@ -9,8 +9,12 @@ export default {
     "./node_modules/@material-tailwind/react/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-
-    extend: {},
+    extend: {
+      fontFamily: {
+        KiwiFruit: ['KiwiFruit', 'sans-serif'],
+        Poppins: ['Poppins', 'sans-serif']
+      },
+    },
   },
   plugins: [mtConfig],
 }
