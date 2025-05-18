@@ -6,7 +6,7 @@ import { Button } from "@material-tailwind/react";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px] ">
+    <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px]  border border-black">
       {/* Logo */}
       <div className="font-KiwiFruit text-6xl  flex ">
         <p className="text-red-600">Mix</p>

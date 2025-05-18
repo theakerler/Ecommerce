@@ -1,12 +1,11 @@
 import { Typography, IconButton } from "@material-tailwind/react";
 import { Facebook, Instagram, X, Github, Dribbble }  from 'lucide-react';
-import AmericanExpress from "../../assets/images/AmericanExpress.svg";
-import Visa from "../../assets/images/Visa.svg";
-import Mastercard from "../../assets/images/Mastercard.svg";
-import DinersClub from "../../assets/images/DinersClub.svg";
-import libro from "../../assets/images/libro.svg";
-import familia from "../../assets/images/familia.jpg";
-import { a } from "motion/react-client";
+import AmericanExpress from "../../assets/images/footer/AmericanExpress.svg";
+import Visa from "../../assets/images/footer/Visa.svg";
+import Mastercard from "../../assets/images/footer/Mastercard.svg";
+import DinersClub from "../../assets/images/footer/DinersClub.svg";
+import libro from "../../assets/images/footer/libro.svg";
+import familia from "../../assets/images/footer/familia.jpg";
 
 const LINKS = [
   {
@@ -72,7 +71,7 @@ const LINKS = [
 
 const YEAR = new Date().getFullYear();
 
-export default function FooterWithSocialLinks() {
+export default function FooterC() {
   return (
     <footer className="relative w-full  overflow-hidden  "
     style={{ backgroundImage: `url(${familia})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -87,6 +86,7 @@ export default function FooterWithSocialLinks() {
                 <Typography type="h1" className=" font-KiwiFruit font-normal ">
                     &Match
                 </Typography>
+                
             </div>
           <div className="grid grid-cols-3 justify-between gap-x-6 gap-y-4  col-span-3">
             {LINKS.map(({ title, items }) => (
