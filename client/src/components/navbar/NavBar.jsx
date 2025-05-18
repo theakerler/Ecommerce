@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { ShoppingCart, Truck, User, ChevronDown  } from 'lucide-react';
 import FlyoutLink from './FlyoutLink';
 import { Button } from "@material-tailwind/react";
 
+import axios from "axios";
 
 const Navbar = () => {
+  const [user, setUser] = useState(null);
+
+  // Verifica si hay token y obtiene el usuario autenticado
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      axios.get('http://localhost:8080/usuario', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
+      .then(res => setUser(res.data))
+      .catch(() => setUser(null));
+    } else {
+      setUser(null);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setUser(null);
+  };
   return (
-    <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px]  border border-black">
+    <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px]  ">
       {/* Logo */}
       <div className="font-KiwiFruit text-6xl  flex ">
         <p className="text-red-600">Mix</p>
@@ -52,7 +75,24 @@ const Navbar = () => {
             <Truck className="w-7 h-7 cursor-pointer " />
           </a>
         </div>
-        <Button as="a" href="#" variant="ghost" className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]' >Iniciar Sesion</Button>;
+        {user ? (
+          <Button
+            variant="ghost"
+            className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
+            onClick={handleLogout}
+          >
+            Cerrar Sesión
+          </Button>
+        ) : (
+          <Button
+            as="a"
+            href="/login"
+            variant="ghost"
+            className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
+          >
+            Iniciar Sesión
+          </Button>
+        )}
       </div>
     </nav>
   );
