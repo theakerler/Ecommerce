@@ -36,17 +36,18 @@ const FlyoutLink = ({ children, href, FlyoutContent }) => {
       </div>
       <AnimatePresence mode="wait">
 
+        {/* {true && ( */}
       {showFlyout && (
         <motion.div
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute left-[0%]  w-full  top-[80px] text-black  rounded  z-50 px-[150px] bg-transparent"
+          className="absolute left-[0%]  w-full  top-[80px] text-black  rounded  z-50 px-[150px] "
         >
          
-          <div className="w-full h-[300px]  shadow-md" onMouseLeave={() => setOpen(false)}>
-
+          <div className="w-full h-[350px] bg-white  shadow-md" onMouseLeave={() => setOpen(false)}>
+            {FlyoutContent && <FlyoutContent />}
           </div>
            
         </motion.div>

@@ -3,11 +3,27 @@ import React, { useEffect, useState } from 'react';
 import { ShoppingCart, Truck, User, ChevronDown  } from 'lucide-react';
 import FlyoutLink from './FlyoutLink';
 import { Button } from "@material-tailwind/react";
+import CategoryFlyoutContent from "./CategoryFlyoutContent";
+import InfantilCategory from './InfantilCategory';
+import BasicosCategory from './BasicosCategory';
 
+
+import { mujerLinks, mujerbasicosLinks, mujeraccesoriosLinks } from './DataNav';
+import { hombreLinks, hombrebasicosLinks, hombreaccesoriosLinks } from './DataNav';
+import { ninosLinks, ninasLinks, accesoriosLinks } from './DataNav';
+
+import mujer1 from "../../assets/images/nav/mujer1.png"
+import mujer2 from "../../assets/images/nav/mujer2.png"
+import hombre1 from "../../assets/images/nav/hombre1.png"
+import hombre2 from "../../assets/images/nav/hombre2.png"
+import nino1 from "../../assets/images/nav/nino1.png"
+import nino2 from "../../assets/images/nav/nino2.png"
+// Si DataNav.jsx está en src/components/Navbar/DataNav.jsx
 import axios from "axios";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+
 
   // Verifica si hay token y obtiene el usuario autenticado
   useEffect(() => {
@@ -28,32 +44,88 @@ const Navbar = () => {
     localStorage.removeItem('refreshToken');
     setUser(null);
   };
+
+
+
+
+
+
+  
   return (
     <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px]  ">
       {/* Logo */}
-      <div className="font-KiwiFruit text-6xl  flex ">
-        <p className="text-red-600">Mix</p>
-        <p className=""> &Match</p>
-      </div>
+      <a href="/">
+        <div className="font-KiwiFruit text-6xl  flex ">
+          <p className="text-red-600">Mix</p>
+          <p className=""> &Match</p>
+        </div>
+      </a>
 
       {/* Menú principal */}
       <div className='h-full  '>
 
         <ul className="flex items-center h-full  text-sm font-medium gap-4 text-gray-700 font-Poppins ">
-          <FlyoutLink href="#" FlyoutContent={PricingContent} >
+            <FlyoutLink
+              href="#"
+              FlyoutContent={() => (
+                <CategoryFlyoutContent
+                  title="Moda Mujer"
+                  moda={mujerLinks}
+                  basicos={mujerbasicosLinks}
+                  accesorios={mujeraccesoriosLinks}
+                  images={[mujer1, mujer2]}
+                  buttonLabel="Ver Todo"
+                  buttonHref="#"
+                />
+              )}
+            >
             Mujer
             <ChevronDown className="w-5 h-5 cursor-pointer" />
           </FlyoutLink>
 
-          <FlyoutLink href="#" FlyoutContent={PricingContent} >
+          <FlyoutLink href="#" 
+          FlyoutContent={() => (
+                <CategoryFlyoutContent
+                  title="Moda Hombre"
+                  moda={hombreLinks}
+                  basicos={hombrebasicosLinks}
+                  accesorios={hombreaccesoriosLinks}
+                  images={[hombre1, hombre2]}
+                  buttonLabel="Ver Todo"
+                  buttonHref="#"
+                />
+              )} >
             Hombre
             <ChevronDown className="w-5 h-5 cursor-pointer" />
           </FlyoutLink> 
-          <FlyoutLink href="#" FlyoutContent={PricingContent} >
+          <FlyoutLink href="#" 
+          FlyoutContent={() => (
+                <InfantilCategory
+                  ninias={ninasLinks}
+                  ninios={ninosLinks}
+                  accesorios={accesoriosLinks}
+                  img={[nino1, nino2]}
+                  buttonLabel="Ver Todo"
+                  buttonHref="#"
+                />
+              )} >
             Infantil
             <ChevronDown className="w-5 h-5 cursor-pointer" />
           </FlyoutLink>
-          <FlyoutLink href="#" FlyoutContent={PricingContent} >
+          <FlyoutLink 
+            href="#" 
+            FlyoutContent={() => (
+                  <BasicosCategory
+                    basicosMujer={mujerbasicosLinks}
+                    basicosHombre={hombrebasicosLinks}
+                    accesorioMujer={mujeraccesoriosLinks}
+                    accesorioHombre={hombreaccesoriosLinks}
+                    img={[mujer1, mujer2]}
+                    buttonLabel="Ver Todo"
+                    buttonHref="#"
+                  />
+              )} 
+            >
             Basicos
             <ChevronDown className="w-5 h-5 cursor-pointer" />
           </FlyoutLink>

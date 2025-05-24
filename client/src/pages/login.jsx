@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar/NavBar";
+import Navbar from "../components/navbaar/NavBar";
 import { Typography, Input, Button, Card } from "@material-tailwind/react";
 import imagen1 from "../assets/images/login/imagen1.webp";
 import imagen2 from "../assets/images/login/imagen2.webp";
@@ -139,6 +139,14 @@ export default function Login() {
                         text="continue_with"
                       />
                     </GoogleOAuthProvider>
+                  </div>
+                  <div className="flex  gap-x-2">
+                    <span>
+                    No tienes una cuenta? 
+                    </span>
+                    <a href="/register" className="text-red-500 hover:text-red-700">
+                       Regístrate
+                    </a>
                   </div>
                 </div>
               </Card>
