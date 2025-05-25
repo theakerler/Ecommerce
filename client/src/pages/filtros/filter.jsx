@@ -365,7 +365,7 @@ React.useEffect(() => {
                     <div className="grid grid-cols-4 gap-4">
                         {productos.map((producto) => (
                             <Card key={producto.id} className=" flex flex-col items-start shadow-md relative rounded-none">
-                               <a className="relative group  mb-2 " href="#">
+                               <a className="relative group  mb-2 "  href={`/mujer/${categoria}/${producto.id}/${producto.descuentoAplicado}`}>
                                     <img
                                     src={url + producto.imagenPrincipal}
                                     alt={producto.nombre}
@@ -388,7 +388,7 @@ React.useEffect(() => {
                                         {producto.marca}
                                     </Typography>
                                     <div className="flex flex-col gap-1">
-                                        <a  className="" href="#">
+                                        <a  className="" href={`/mujer/${categoria}/${producto.id}/${producto.descuentoAplicado}`}>
                                             {producto.nombre}
                                         </a>
                                         <Typography variant="small" className="text-gray-500  mb-1">
