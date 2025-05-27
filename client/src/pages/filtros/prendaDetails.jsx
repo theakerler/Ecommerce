@@ -222,7 +222,7 @@ const PrendaDetails = () => {
                                 {prenda.tallas.map((tallaObj) => (
                                     <button
                                         key={tallaObj.id}
-                                        className={`border rounded-full px-5 py-3 hover:bg-gray-200 ${
+                                        className={`border rounded-full h-[60px] w-[60px] hover:bg-gray-200 ${
                                         selectedTalla === tallaObj.id ? "border-black" : "border-gray-300"
                                         }`}
                                         onClick={() => setSelectedTalla(tallaObj.id)}

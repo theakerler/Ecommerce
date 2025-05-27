@@ -337,7 +337,7 @@ React.useEffect(() => {
             </div>
 
             {/* parte izquierda */}
-            <div className="  pl-10   ">
+            <div className="  pl-10 w-[calc(100%-250px)]  ">
                 {/* header */}
                 <div className="w-full h-[60px] flex justify-between items-center mb-10">
                     <Typography  className="text-gray-700 text-[25px] font-semibold font-Poppins">
@@ -369,12 +369,12 @@ React.useEffect(() => {
                                     <img
                                     src={url + producto.imagenPrincipal}
                                     alt={producto.nombre}
-                                    className="w-[240px] object-center  transition-opacity duration-300 absolute top-0 left-0 z-10 group-hover:opacity-0"
+                                    className="w-full object-center  transition-opacity duration-300 absolute top-0 left-0 z-10 group-hover:opacity-0"
                                     />
                                     <img
                                     src={url + producto.imagenHover}
                                     alt={producto.nombre + ' hover'}
-                                    className="w-[240px] object-contain  transition-opacity duration-300 obsolute  top-0 left-0 z-20 opacity-0 group-hover:opacity-100"
+                                    className="w-full object-contain  transition-opacity duration-300 obsolute  top-0 left-0 z-20 opacity-0 group-hover:opacity-100"
                                     />
                                 </a>
                                 {/* Badge de descuento */}
@@ -383,12 +383,12 @@ React.useEffect(() => {
                                         -{producto.descuentoAplicado}%
                                     </span>
                                 )}
-                                <div className="w-full flex flex-col items-start px-3 gap-2">
+                                <div className="w-full flex flex-col items-start px-3 gap-2 pb-4">
                                     <Typography variant="small" as="a" href="#" className="text-gray-600  mb-1">
                                         {producto.marca}
                                     </Typography>
                                     <div className="flex flex-col gap-1">
-                                        <a  className="" href={`/mujer/${categoria}/${producto.id}/${producto.descuentoAplicado}`}>
+                                        <a  className="h-[50px]" href={`/mujer/${categoria}/${producto.id}/${producto.descuentoAplicado}`}>
                                             {producto.nombre}
                                         </a>
                                         <Typography variant="small" className="text-gray-500  mb-1">
