@@ -40,8 +40,14 @@ export default function Login() {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       console.log(accessToken);
-      
-      navigate("/"); // Redirige a la ruta principal
+      // Redirección inteligente
+    const redirectPath = localStorage.getItem("redirectAfterLogin");
+    if (redirectPath) {
+      localStorage.removeItem("redirectAfterLogin");
+      navigate(redirectPath);
+    } else {
+      navigate("/");
+    }
     } catch (err) {
       setError("Credenciales incorrectas");
       console.error("Error en el login:", err.response ? err.response.data : err.message);
@@ -58,10 +64,22 @@ export default function Login() {
         credential: response.credential,
         clientId: clientId,
       });
-    //    const { accessToken, email, name, username, roles } = res.data;
+          console.log(res.data); // <-- Aquí ves la respuesta del backend
+          
+
+    const { accessToken, refreshToken } = res.data;
     localStorage.setItem("accessToken", accessToken);
-    // localStorage.setItem("user", JSON.stringify({ email, name, username, roles }));
-      navigate("/"); // Redirige a la ruta principal
+    localStorage.setItem("refreshToken", refreshToken);
+
+      // localStorage.setItem("user", JSON.stringify({ email, name, username, roles }));
+        // Redirección inteligente
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+      if (redirectPath) {
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectPath);
+      } else {
+        navigate("/");
+    }
     } catch (error) {
       const errorMessage = error.response?.data?.error || "Error al autenticar con el backend";
       setError(errorMessage);

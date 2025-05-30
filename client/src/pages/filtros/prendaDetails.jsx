@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbaar/NavBar';
 import img from "../../assets/images/img.gif";
 import { Typography, Collapse, List, Button, Breadcrumb  } from "@material-tailwind/react";
 import { Plus, Minus, Ruler, House, Store, BadgeCheck, Box     } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
  import FooterC from '../../components/footer/Footer';
+ import Swal from 'sweetalert2';
+import axios from "axios";
 const PrendaDetails = () => {
   const { id,descuento } = useParams(); // Obtener el ID de la prenda desde la URL
   const [prenda, setPrenda] = useState(null);
@@ -19,6 +21,13 @@ const PrendaDetails = () => {
   const [selectedTalla, setSelectedTalla] = useState(null); // Estado para la talla seleccionada
 
   
+  const navigate = useNavigate();
+  // Función para verificar si hay usuario logeado
+  const isUserLoggedIn = () => {
+    // Ejemplo: verifica si hay un token en localStorage (ajusta según tu auth)
+    return !!localStorage.getItem('accessToken');
+  };
+
   useEffect(() => {
     const fetchPrenda = async () => {
       try {
@@ -49,6 +58,107 @@ const PrendaDetails = () => {
 
   
   
+const handleAddToCart = async () => {
+  if (!isUserLoggedIn()) {
+    localStorage.setItem('redirectAfterLogin', window.location.pathname + window.location.search);
+    Swal.fire({
+      icon: 'info',
+      title: 'Necesitas logearte',
+      text: 'Por favor, inicia sesión para agregar productos al carrito.',
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No hay token de acceso");
+
+    // 1. Obtener usuarioId
+    const userRes = await axios.get("http://127.0.0.1:8080/usuario-id", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const usuarioId = userRes.data;
+
+      let carritoId;
+      let tituloCarrito = "";
+    const abiertoRes = await axios.get(
+      `http://127.0.0.1:8080/api/v1/carrito/abierto/usuario/${usuarioId}`
+    );
+   if (abiertoRes.data.object && abiertoRes.data.object.length > 0) {
+  carritoId = abiertoRes.data.object[0].id;
+  console.log("Carrito abierto encontrado:", carritoId);
+  tituloCarrito= "Producto agregado al carrito existente";
+} else {
+      // Si no hay, crear uno nuevo
+      const carritoRes = await axios.post(
+        "http://127.0.0.1:8080/api/v1/carrito",
+        { usuarioId, estado: "ABIERTO" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      carritoId = carritoRes.data.object.id;
+  tituloCarrito= "Producto agregado al carrito nuevo";
+
+    }
+
+    try {
+        console.log("selectedTalla (debe ser id):", selectedTalla);
+
+    // 1. Intentar incrementar cantidad si el item ya existe
+    await axios.post(
+      "http://127.0.0.1:8080/api/v1/carrito-item/agregar",
+      null,
+      {
+        params: {
+          carritoId,
+          prendaId: Number(id),
+          tallaId: selectedTalla // Aquí debes enviar el ID de la talla, no el nombre
+        }
+      }
+    );
+    Swal.fire({
+      icon: 'success',
+      title: 'Cantidad incrementada para el item existente',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  } catch (error) {
+     // Si no existe el item, lo creamos
+        const selectedTallaObj = prenda.tallas.find(t => t.talla.id === selectedTalla);
+    const tallaNombre = selectedTallaObj ? selectedTallaObj.talla.nomTalla : "";
+    await axios.post(
+      "http://127.0.0.1:8080/api/v1/carrito-item",
+      {
+        carritoId,
+        prendaId: Number(id),
+        talla: tallaNombre,
+        cantidad: 1,
+        precioUnitario: Number(precioConDescuento)
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto agregado al carrito',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo agregar el producto al carrito.',
+    });
+    console.error(error);
+  }
+};
  return (
     <>
     <div className='h-full  flex flex-col gap-10 '>
@@ -219,18 +329,18 @@ const PrendaDetails = () => {
                             <h3 className="text-lg font-semibold font-Poppins">Talla</h3>
                             <div className="flex justify-between items-center ">
                                 <div className="flex gap-2 ">
-                                {prenda.tallas.map((tallaObj) => (
-                                    <button
-                                        key={tallaObj.id}
-                                        className={`border rounded-full h-[60px] w-[60px] hover:bg-gray-200 ${
-                                        selectedTalla === tallaObj.id ? "border-black" : "border-gray-300"
-                                        }`}
-                                        onClick={() => setSelectedTalla(tallaObj.id)}
-                                        type="button"
-                                    >
-                                        {tallaObj.talla.nomTalla}
-                                    </button>
-                                    ))}
+                                                                {prenda.tallas.map((tallaObj) => (
+                                  <button
+                                    key={tallaObj.talla.id}
+                                    className={`border rounded-full h-[60px] w-[60px] hover:bg-gray-200 ${
+                                      selectedTalla === tallaObj.talla.id ? "border-black" : "border-gray-300"
+                                    }`}
+                                    onClick={() => setSelectedTalla(tallaObj.talla.id)}
+                                    type="button"
+                                  >
+                                    {tallaObj.talla.nomTalla}
+                                  </button>
+                                ))}
                                 </div>
                                 <div>
                                     <Typography as="a" href='#' className="text-sm text-gray-600 flex">
@@ -256,7 +366,7 @@ const PrendaDetails = () => {
                             <Button
                                 className="mt-4 border-none font-Poppins font-bold text-white px-4 py-3 rounded cursor-pointer w-full bg-red-500 hover:bg-red-600"
                                 fullWidth
-                                onClick={() => {/* lógica para agregar al carrito */}}
+                                onClick={handleAddToCart}
                             >
                                 Agregar Carrito
                             </Button>
