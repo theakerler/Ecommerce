@@ -104,7 +104,7 @@ const handleAddToCart = async () => {
   tituloCarrito= "Producto agregado al carrito nuevo";
 
     }
-
+localStorage.setItem('carritoId', carritoId);
     try {
         console.log("selectedTalla (debe ser id):", selectedTalla);
 
@@ -126,6 +126,7 @@ const handleAddToCart = async () => {
       showConfirmButton: false,
       timer: 1500,
     });
+
   } catch (error) {
      // Si no existe el item, lo creamos
         const selectedTallaObj = prenda.tallas.find(t => t.talla.id === selectedTalla);
@@ -149,6 +150,16 @@ const handleAddToCart = async () => {
       timer: 1500,
     });
   }
+  // ACTUALIZA EL CONTADOR DEL CARRITO AQUÍ
+    const cantidadRes = await axios.get(
+      `http://127.0.0.1:8080/api/v1/carrito/${carritoId}/cantidad-items`
+    );
+    console.log("Cantidad de items en el carrito:", cantidadRes.data);
+    // Si tu backend responde { cantidad: 3 }, usa cantidadRes.data.cantidad
+   const cantidad = cantidadRes.data.object;
+localStorage.setItem('cartCount', String(cantidad || 0));
+window.dispatchEvent(new Event('cart-updated'));
+
 
   } catch (error) {
     Swal.fire({
@@ -159,6 +170,7 @@ const handleAddToCart = async () => {
     console.error(error);
   }
 };
+
  return (
     <>
     <div className='h-full  flex flex-col gap-10 '>
