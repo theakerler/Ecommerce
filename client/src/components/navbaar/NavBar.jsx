@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import { ShoppingCart, Truck, User, ChevronDown  } from 'lucide-react';
 import FlyoutLink from './FlyoutLink';
-import { Button } from "@material-tailwind/react";
+import { Button, Badge, IconButton } from "@material-tailwind/react";
 import CategoryFlyoutContent from "./CategoryFlyoutContent";
 import InfantilCategory from './InfantilCategory';
 import BasicosCategory from './BasicosCategory';
+
+import { useNavigate } from "react-router-dom"; // <-- AGREGA ESTO
 
 
 import { mujerLinks, mujerbasicosLinks, mujeraccesoriosLinks } from './DataNav';
@@ -23,34 +25,59 @@ import axios from "axios";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+const [loadingUser, setLoadingUser] = useState(true);
+  const navigate = useNavigate(); // <-- Y ESTO
 
 
-  // Verifica si hay token y obtiene el usuario autenticado
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      axios.get('http://localhost:8080/usuario', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      })
-      .then(res => setUser(res.data))
-      .catch(() => setUser(null));
-    } else {
-      setUser(null);
-    }
-  }, []);
+useEffect(() => {
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken) {
+    axios.get('http://localhost:8080/usuario', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    })
+    .then(res => setUser(res.data))
+    .catch(() => setUser(null))
+    .finally(() => setLoadingUser(false));
+  } else {
+    setUser(null);
+    setLoadingUser(false);
+  }
+}, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setUser(null);
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('cartCount'); // Limpia el contador del carrito
+  setCartCount(0); // Actualiza el estado local
+  window.dispatchEvent(new Event('cart-updated')); // Notifica a otros componentes
+  setUser(null);
+};
+
+
+const [cartCount, setCartCount] = useState(() => {
+  const count = Number(localStorage.getItem('cartCount'));
+  return isNaN(count) ? 0 : count;
+});
+
+useEffect(() => {
+  const updateCartCount = () => {
+    const count = Number(localStorage.getItem('cartCount'));
+    setCartCount(isNaN(count) ? 0 : count);
+  };
+  window.addEventListener('cart-updated', updateCartCount);
+  updateCartCount();
+  return () => window.removeEventListener('cart-updated', updateCartCount);
+}, []);
+
+  const handleCartClick = () => {
+    const carritoId = localStorage.getItem('carritoId');
+    if (carritoId) {
+      navigate(`/mujer/carrito/${carritoId}`);
+    } else {
+      navigate(`/mujer/carrito`);
+    }
   };
 
-
-
-
-
-
-  
   return (
     <nav className="flex items-center justify-between px-[10%] shadow-md bg-white  h-[80px]  ">
       {/* Logo */}
@@ -135,74 +162,49 @@ const Navbar = () => {
         </ul>
       </div>
       {/* Iconos + botón */}
-      <div className="flex items-center gap-10   h-[50px]">
+      <div className="flex items-center gap-10   h-[50px] ">
         <div className='flex gap-5'>
-          <a href="#">
-            <User className="w-7 h-7 cursor-pointer " />
-          </a>
-          <a href="#">
-            <ShoppingCart className="w-7 h-7 cursor-pointer " />
-          </a>
-          <a href="#">
-            <Truck className="w-7 h-7 cursor-pointer " />
-          </a>
+            <IconButton color=" "  className='hover:shadow-none border-none'>
+              <User className="h-7 w-7 stroke-2" />
+            </IconButton>
+
+                <Badge content={cartCount > 0 ? cartCount : undefined}>
+                <Badge.Content>
+                  <IconButton color="" className='hover:shadow-none border-none'
+                  onClick={handleCartClick}>
+                  <ShoppingCart className="h-7 w-7 stroke-2" />
+                  </IconButton>
+              </Badge.Content>
+              <Badge.Indicator>{cartCount > 0 ? cartCount : null}</Badge.Indicator>
+            </Badge>
+          <IconButton color="" className='hover:shadow-none border-none'>
+              <Truck className="h-7 w-7 stroke-2" />
+            </IconButton>
         </div>
-        {user ? (
-          <Button
-            variant="ghost"
-            className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
-            onClick={handleLogout}
-          >
-            Cerrar Sesión
-          </Button>
-        ) : (
-          <Button
-            as="a"
-            href="/login"
-            variant="ghost"
-            className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
-          >
-            Iniciar Sesión
-          </Button>
-        )}
+        {!loadingUser && (
+    user ? (
+      <Button
+        variant="ghost"
+        className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
+        onClick={handleLogout}
+      >
+        Cerrar Sesión
+      </Button>
+    ) : (
+      <Button
+        as="a"
+        href="/login"
+        variant="ghost"
+        className='bg-red-200 hover:bg-red-300 text-[16px] text-gray-800 font-Poppins px-4 py-2 rounded h-[50px]'
+      >
+        Iniciar Sesión
+      </Button>
+    )
+  )}
       </div>
     </nav>
   );
 };
 
-
-// Componente de contenido del flyout
-// Este componente se renderiza dentro del flyout
-// Puedes personalizarlo según tus necesidades
-const PricingContent = () => {
-  return (
-    <div className="w-64 bg-white p-6 shadow-xl">
-      <div className="mb-3 space-y-3">
-        <h3 className="font-semibold">For Individuals</h3>
-        <a href="#" className="block text-sm hover:underline">
-          Introduction
-        </a>
-        <a href="#" className="block text-sm hover:underline">
-          Pay as you go
-        </a>
-      </div>
-      <div className="mb-6 space-y-3">
-        <h3 className="font-semibold">For Companies</h3>
-        <a href="#" className="block text-sm hover:underline">
-          Startups
-        </a>
-        <a href="#" className="block text-sm hover:underline">
-          SMBs
-        </a>
-        <a href="#" className="block text-sm hover:underline">
-          Enterprise
-        </a>
-      </div>
-      <button className="w-full rounded-lg border-2 border-neutral-950 px-4 py-2 font-semibold transition-colors hover:bg-neutral-950 hover:text-white">
-        Contact sales
-      </button>
-    </div>
-  );
-};
 
 export default Navbar;
