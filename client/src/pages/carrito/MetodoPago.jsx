@@ -22,7 +22,7 @@ const MetodoPago = ({ onSeleccionar, total, ventaId, carritoId, datos }) => {
         <div className="w-full mt-4">
           <PaypalButton amount={total} onSuccess={details => {
             alert("Pago realizado con éxito. ID: " + details.id);
-          }} />
+          }} ventaId={ventaId} metodoId={metodo.id} carritoId={carritoId} datos={datos} />
         </div>
       );
     } else if (metodo.tipoPago.toLowerCase().includes("tarjeta")) {
@@ -34,7 +34,7 @@ const MetodoPago = ({ onSeleccionar, total, ventaId, carritoId, datos }) => {
     }
     if (onSeleccionar) onSeleccionar(metodo);
   };
-
+ 
   return (
     <div className="w-[600px] items-center gap-6 p-8 border border-gray-200 h-full">
       <div className="flex items-center gap-3 mb-6">
