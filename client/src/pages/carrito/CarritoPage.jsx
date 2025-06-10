@@ -241,7 +241,7 @@ const [descuento, setDescuento] = useState(null);
 
       
             </div>
-    <div className="flex w-full justify-between gap-4 ">
+    {/* <div className="flex w-full justify-between gap-4 ">
         <Button
          disabled={step === 0} onClick={() => setStep(step - 1)}>
           Anterior
@@ -253,7 +253,7 @@ const [descuento, setDescuento] = useState(null);
         >
           Siguiente
         </Button>
-      </div>
+      </div> */}
         </div>
         <div className="w-full pb-[100px]">
         {contenidoPaso}
