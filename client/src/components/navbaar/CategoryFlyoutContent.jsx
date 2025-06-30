@@ -4,7 +4,7 @@ import { Typography, Button } from "@material-tailwind/react";
 const CategoryFlyoutContent = ({ title, moda,basicos,accesorios,  images = [], buttonLabel = "Ver Todo", buttonHref = "#" }) => (
   <div className="flex flex-col w-full h-full justify-between font-Poppins px-5 pb-5  ">  
     <div className="flex">
-      <div className="w-[35%] h-full">
+      <div className="w-[35%] h-full max-lg:w-[70%]">
         <div className="w-full">
           <Typography className="font-semibold">{title}</Typography>
         </div>
@@ -18,7 +18,7 @@ const CategoryFlyoutContent = ({ title, moda,basicos,accesorios,  images = [], b
          
       </div>
       <div className=" w-[28%] h-full flex ">
-                <div className="w-1/2  px-4">
+                <div className="w-1/2  px-4 ">
                     <div  className="w-full">
                         <Typography className="font-semibold">Basicos</Typography>
                     </div>
@@ -46,7 +46,7 @@ const CategoryFlyoutContent = ({ title, moda,basicos,accesorios,  images = [], b
                 </div>
             </div>
       {images.length > 0 && (
-        <div className="w-[40%] h-full flex items-center justify-center gap-4">
+        <div className="w-[40%] h-full flex items-center justify-center gap-4 max-lg:hidden">
           {images.map((img, idx) => (
             <img src={img} alt="" key={idx} className="w-[45%] object-cover" />
           ))}

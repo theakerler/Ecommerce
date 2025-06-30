@@ -168,8 +168,8 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
 
   return (
     <>
-        <div className="w-full mt-6 flex px-[10%] gap-10">
-            <div className="w-[65%]">
+        <div className="w-full mt-6 flex px-[10%] gap-10  max-xl:flex-col  max-md:px-[5%]">
+            <div className="w-[65%] max-xl:w-[100%]">
                 <table className="w-full text-left   ">
                     <thead>
                     <tr className="text-base font-semibold">
@@ -188,7 +188,7 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
                             <img
                                 src={`http://127.0.0.1:8080/${item.prenda.imagen.principal}`}
                                 alt={item.prenda.nombre}
-                                className="w-16 h-20 object-cover rounded"
+                                className="w-16 h-20 object-cover rounded max-sm:hidden"
                             />
                             <div>
                                 <div className="font-semibold">{item.prenda.nombre}</div>
@@ -249,7 +249,7 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
                 </table>
 
             </div>
-            <div className="w-[35%] h-[400px] flex flex-col justify-start items-center">
+            <div className="w-[35%] h-[400px] flex flex-col justify-start items-center max-xl:w-[100%] max-xl:h-auto">
   <div className="w-full mbg-white rounded-lg shadow p-5 mt-2">
     {/* Cupón */}
         <div className="flex mb-4">
@@ -258,7 +258,7 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
               placeholder="Cupón de descuento"
               value={cupon}
               onChange={e => setCupon(e.target.value)}
-              className="rounded-none rounded-l border border-black"
+              className="rounded-none rounded-l "
               labelProps={{
                 className: "hidden",
               }}

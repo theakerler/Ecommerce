@@ -141,7 +141,7 @@ const DatosPersonales = ({ datos, setDatos, onContinuar, carritoId, ventaId, set
             maxLength={100}
           />
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 max-lg:flex-col">
           <div className="flex-1">
             <Typography variant="small" className="font-bold mb-1">Nombre</Typography>
             <Input
@@ -169,7 +169,7 @@ const DatosPersonales = ({ datos, setDatos, onContinuar, carritoId, ventaId, set
             />
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 max-lg:flex-col">
           <div className="flex-1">
             <Typography variant="small" className="font-bold mb-1">Documento de Identidad</Typography>
             <Input
@@ -251,21 +251,22 @@ const DatosPersonales = ({ datos, setDatos, onContinuar, carritoId, ventaId, set
               Quiero recibir novedades y promociones.
             </Typography>
           </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2  ">
           <Checkbox
             id="acepta"
             name="acepta"
             checked={!!datos.acepta}
             onChange={handleChange}
+            className="max-md:w-8 h-5"
           >
             <Checkbox.Indicator />
           </Checkbox>
           <Typography
             as="label"
             htmlFor="acepta"
-            className="cursor-pointer text-foreground"
+            className="cursor-pointer text-foreground "
           >
-            <span>
+            <span className="max-md:text-sm">
               Acepto los <a href="#" className="text-blue-600 underline">Términos y Condiciones</a> y la{" "}
               <a href="#" className="text-blue-600 underline">Política de protección de datos personales</a>.
             </span>

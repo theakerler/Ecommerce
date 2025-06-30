@@ -95,7 +95,7 @@ useEffect(() => {
 
   return (
     <>
-    <div className="w-[600px] border border-gray-200 p-5">
+    <div className="w-[600px] border border-gray-200 p-5 max-lg:w-auto">
         <div className="flex items-center gap-3 mb-6">
           <Typography className="font-bold font-Poppins text-3xl">Datos de entrega</Typography>
         </div>

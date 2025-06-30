@@ -20,7 +20,7 @@ const ResumenCompra = ({ carritoId, descuento, onNextStep }) => {
   const total = subtotal - descuentoValor;
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow w-full max-w-xs">
+    <div className="bg-white rounded-lg p-6 shadow w-full ">
       <h3 className="font-bold text-xl text-center mb-4">Resumen de la compra</h3>
       <div className="mb-4">
         {carrito.carritoItems.map(item => (

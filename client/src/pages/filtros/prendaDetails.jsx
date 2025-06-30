@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/navbaar/NavBar';
+import NavBarResponsive from '../../components/navbaar/NavBarResponsive';
 import img from "../../assets/images/img.gif";
 import { Typography, Collapse, List, Button, Breadcrumb  } from "@material-tailwind/react";
 import { Plus, Minus, Ruler, House, Store, BadgeCheck, Box     } from "lucide-react";
@@ -8,6 +9,11 @@ import { motion, AnimatePresence } from "framer-motion";
  import FooterC from '../../components/footer/Footer';
  import Swal from 'sweetalert2';
 import axios from "axios";
+
+import WhatsAppButton from "../../components/contact/WhatsAppButton";
+
+
+
 const PrendaDetails = () => {
   const { id,descuento } = useParams(); // Obtener el ID de la prenda desde la URL
   const [prenda, setPrenda] = useState(null);
@@ -174,8 +180,10 @@ window.dispatchEvent(new Event('cart-updated'));
  return (
     <>
     <div className='h-full  flex flex-col gap-10 '>
-      <Navbar />
-      <div className="w-full   px-[10%]">
+              <WhatsAppButton />
+      
+      <NavBarResponsive />
+      <div className="w-full   px-[10%] max-lg:px-[20px]">
         {/* primera parte */}
         <div className='w-full h-[50px] pb-5  flex items-center justify-between '>
             <Breadcrumb className="font-Poppins ">
@@ -191,11 +199,11 @@ window.dispatchEvent(new Event('cart-updated'));
             </Breadcrumb>
         </div>
         {/* segunda parte */}
-        <div className="w-full    flex  gap-10 ">
+        <div className="w-full    flex  gap-10 max-md:flex-col ">
             {/* imagenes parte derecha*/}
-            <div className='flex flex-col w-[50%] gap-10 h-full justify-center  '>
-                <div className='flex w-full h-full  gap-4 '>
-                    <div className='w-[107px]    flex flex-col gap-2 '>
+            <div className='flex flex-col w-[50%] gap-10 h-full justify-center  max-md:w-[100%]'>
+                <div className='flex w-full h-full  gap-4 max-lg:flex-col'>
+                    <div className='w-[107px]    flex flex-col gap-2 max-lg:flex-row max-lg:w-full'>
 
                         <div
                             className="  cursor-pointer w-full h-auto"
@@ -260,7 +268,7 @@ window.dispatchEvent(new Event('cart-updated'));
                         </div>
 
                     </div>
-                    <div className=' h-[700px] w-[calc(100%-107px)] flex justify-center   '>
+                    <div className=' h-[700px] w-[calc(100%-107px)] flex justify-center  max-lg:w-[100%]'>
                          
                         <div className=' h-full  '>
 
@@ -283,7 +291,7 @@ window.dispatchEvent(new Event('cart-updated'));
                     </div>
                 </div>
                 {/* carda/ */}
-                <div  className=' h-[150px]  flex justify-center  gap-4'>
+                <div  className='  flex justify-center  gap-4 flex-wrap max-2xl:h-auto max-md:hidden'>
                     <div className=' w-[200px] flex flex-col justify-center items-center gap-2 bg-gray-100/50 p-2'>
                         <Box  className='h-[30px] w-[30px]' />
                         <Typography className='text-gray-900 font-Poppins font-semibold text-[13px]'>¿Y si cambio de opinión?</Typography>
@@ -303,7 +311,7 @@ window.dispatchEvent(new Event('cart-updated'));
                 
             </div>
           {/* parte izquierda */}
-            <div className="w-[60%]  font-Poppins">
+            <div className="w-[60%]  font-Poppins max-md:w-[100%] max-md:px-10 max-sm:px-2">
                 <div className=' flex flex-col h-full gap-6'>
                     {/* header */}
                         <div className='flex flex-col gap-3 '>
@@ -467,6 +475,25 @@ window.dispatchEvent(new Event('cart-updated'));
                         </div>
                 </div>
             </div>
+
+            {/* carda/ */}
+                <div  className='   justify-center  gap-4 flex-wrap max-2xl:h-auto hidden max-md:flex'>
+                    <div className=' w-[200px] flex flex-col justify-center items-center gap-2 bg-gray-100/50 p-2'>
+                        <Box  className='h-[30px] w-[30px]' />
+                        <Typography className='text-gray-900 font-Poppins font-semibold text-[13px]'>¿Y si cambio de opinión?</Typography>
+                        <Typography className="text-center text-gray-600 text-[11px]">Podrás cambiar o devolver tu compra</Typography>
+                    </div>
+                    <div className=' w-[200px] flex flex-col justify-center items-center gap-2 bg-gray-100/50 p-2'>
+                        <Store className='h-[30px] w-[30px]' />
+                        <Typography className='text-gray-900 font-Poppins font-semibold text-[13px]'>Recojo en tienda</Typography>
+                        <Typography className="text-center text-gray-600 text-[11px]">Retira en más +70 tiendas a nivel nacional</Typography>
+                    </div>
+                    <div className=' w-[200px] flex flex-col justify-center items-center gap-2 bg-gray-100/50 p-2'>
+                        <BadgeCheck className='h-[30px] w-[30px]' />
+                        <Typography className='text-gray-900 font-Poppins font-semibold text-[13px]'>Revisa tu pedido</Typography>
+                        <Typography className="text-center text-gray-600 text-[11px]">Ingresa tu N° pedido y conoce su estado.</Typography>
+                    </div>
+                </div>
         </div>
 
       </div>

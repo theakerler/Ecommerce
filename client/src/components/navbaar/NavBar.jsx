@@ -22,6 +22,8 @@ import nino1 from "../../assets/images/nav/nino1.png"
 import nino2 from "../../assets/images/nav/nino2.png"
 // Si DataNav.jsx está en src/components/Navbar/DataNav.jsx
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -72,9 +74,9 @@ useEffect(() => {
   const handleCartClick = () => {
     const carritoId = localStorage.getItem('carritoId');
     if (carritoId) {
-      navigate(`/mujer/carrito/${carritoId}`);
+      navigate(`/carrito/${carritoId}`);
     } else {
-      navigate(`/mujer/carrito`);
+      navigate(`/carrito`);
     }
   };
 
@@ -102,7 +104,7 @@ useEffect(() => {
                   accesorios={mujeraccesoriosLinks}
                   images={[mujer1, mujer2]}
                   buttonLabel="Ver Todo"
-                  buttonHref="#"
+                  buttonHref="/mujer/todas-las-prendas"
                 />
               )}
             >
@@ -156,17 +158,12 @@ useEffect(() => {
             Basicos
             <ChevronDown className="w-5 h-5 cursor-pointer" />
           </FlyoutLink>
-          <FlyoutLink href="#" >
-            Outlet
-          </FlyoutLink>
         </ul>
       </div>
       {/* Iconos + botón */}
       <div className="flex items-center gap-10   h-[50px] ">
         <div className='flex gap-5'>
-            <IconButton color=" "  className='hover:shadow-none border-none'>
-              <User className="h-7 w-7 stroke-2" />
-            </IconButton>
+            
 
                 <Badge content={cartCount > 0 ? cartCount : undefined}>
                 <Badge.Content>
@@ -177,9 +174,11 @@ useEffect(() => {
               </Badge.Content>
               <Badge.Indicator>{cartCount > 0 ? cartCount : null}</Badge.Indicator>
             </Badge>
-          <IconButton color="" className='hover:shadow-none border-none'>
-              <Truck className="h-7 w-7 stroke-2" />
-            </IconButton>
+          <Link to="/envio">
+  <IconButton color="" className="hover:shadow-none border-none">
+    <Truck className="h-7 w-7 stroke-2" />
+  </IconButton>
+</Link>
         </div>
         {!loadingUser && (
     user ? (
