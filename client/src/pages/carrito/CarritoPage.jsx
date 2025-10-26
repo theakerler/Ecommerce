@@ -40,7 +40,7 @@ const CarritoPage = () => {
       try {
         const token = localStorage.getItem("accessToken");
         // Obtener usuarioId
-        const userRes = await fetch("http://127.0.0.1:8080/usuario-id", {
+        const userRes = await fetch("http://localhost:8080/usuario-id", {
           headers: { Authorization: `Bearer ${token}` }
         });
         const usuarioId = await userRes.json();

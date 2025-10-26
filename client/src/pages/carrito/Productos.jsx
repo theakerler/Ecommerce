@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { IconButton, Typography, Input, Button   } from "@material-tailwind/react";
 import { Plus, Minus,Trash2  } from "lucide-react";
 import Swal from "sweetalert2";
-const API_URL = "http://127.0.0.1:8080/api/v1/carrito/";
-const API_ITEM_URL = "http://127.0.0.1:8080/api/v1/carrito-item/";
+const API_URL = "http://localhost:8080/api/v1/carrito/";
+const API_ITEM_URL = "http://localhost:8080/api/v1/carrito-item/";
 const API_APLICAR = "http://localhost:8080/api/v1/aplicar";
-const API_USUARIO_ID = "http://127.0.0.1:8080/usuario-id";
+const API_USUARIO_ID = "http://localhost:8080/usuario-id";
 
 const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, setTotal }) => {
   const [carrito, setCarrito] = useState(null);
@@ -76,6 +76,42 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
     });
 };
 
+const handleRestarUno = async (item) => {
+  if (item.cantidad <= 1) return;
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/v1/sumar-uno?prendaId=${item.prenda.id}&tallaId=${item.talla.id}`,
+      { method: "PUT" }
+    );
+    const data = await res.json();
+    if (!res.ok || !data.object) {
+      Swal.fire("Sin stock", data.mensaje || "No hay stock suficiente.", "warning");
+      return;
+    }
+    handleChangeCantidad(item.id, item.cantidad - 1);
+  } catch (e) {
+    Swal.fire("Error", "No se pudo actualizar el stock.", "error");
+  }
+};
+
+const handleSumarUno = async (item) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/v1/restar-uno?prendaId=${item.prenda.id}&tallaId=${item.talla.id}`,
+      { method: "PUT" }
+    );
+    const data = await res.json();
+    if (!res.ok || !data.object) {
+      Swal.fire("Sin stock", data.mensaje || "No hay stock suficiente.", "warning");
+      return;
+    }
+    handleChangeCantidad(item.id, item.cantidad + 1);
+  } catch (e) {
+    Swal.fire("Error", "No se pudo actualizar el stock.", "error");
+  }
+};
+
+
 // Aplica el cupón de descuento
  const handleAplicarCupon = async () => {
     setAplicando(true);
@@ -141,30 +177,36 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
   if (loading) return <div>Cargando productos...</div>;
   if (!carrito) return <div>No se encontró el carrito.</div>;
 
-  const handleEliminarItem = (itemId) => {
-  Swal.fire({
-    title: "¿Eliminar producto?",
-    text: "¿Estás seguro de que deseas eliminar este producto del carrito?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Sí, eliminar",
-    cancelButtonText: "Cancelar"
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const res = await fetch(`${API_ITEM_URL}${itemId}`, {
-          method: "DELETE",
-        });
-        if (!res.ok) throw new Error("No se pudo eliminar el producto");
-        // Actualiza la vista recargando el carrito
-        fetchCarrito();
-        Swal.fire("Eliminado", "El producto fue eliminado del carrito.", "success");
-      } catch (error) {
-        Swal.fire("Error", "No se pudo eliminar el producto.", "error");
+    const handleEliminarItem = (itemId, item) => {
+    Swal.fire({
+      title: "¿Eliminar producto?",
+      text: "¿Estás seguro de que deseas eliminar este producto del carrito?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // 1. Sumar el stock al eliminar el item del carrito
+          await fetch(
+            `http://localhost:8080/api/v1/sumar?prendaId=${item.prenda.id}&tallaId=${item.talla.id}&cantidad=${item.cantidad}`,
+            { method: "PUT" }
+          );
+          // 2. Eliminar el item del carrito
+          const res = await fetch(`${API_ITEM_URL}${itemId}`, {
+            method: "DELETE",
+          });
+          if (!res.ok) throw new Error("No se pudo eliminar el producto");
+          // Actualiza la vista recargando el carrito
+          fetchCarrito();
+          Swal.fire("Eliminado", "El producto fue eliminado del carrito.", "success");
+        } catch (error) {
+          Swal.fire("Error", "No se pudo eliminar el producto.", "error");
+        }
       }
-    }
-  });
-};
+    });
+  };
 
   return (
     <>
@@ -186,7 +228,7 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
                         <td className="py-4 border-b border-slate-600 ">
                             <div className="flex items-center flex-col gap-4">
                             <img
-                                src={`http://127.0.0.1:8080/${item.prenda.imagen.principal}`}
+                                src={`http://localhost:8080/${item.prenda.imagen.principal}`}
                                 alt={item.prenda.nombre}
                                 className="w-16 h-20 object-cover rounded max-sm:hidden"
                             />
@@ -219,13 +261,17 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
                         <td className="py-4 border-b border-slate-600">
                             <div className="flex items-center gap-2 justify-center">
                             <IconButton className="bg-gray-200 hover:bg-gray-100" size="sm"
-                                                    onClick={() => handleChangeCantidad(item.id, item.cantidad - 1)}
+                                                    onClick={() => {
+                                                      handleRestarUno(item);
+                                                    }}
 >
                                 <Minus className="h-4 w-4 stroke-2 stroke-black" />
                             </IconButton>
                             <span className="w-8 text-center">{item.cantidad}</span>
                             <IconButton className="bg-gray-200 hover:bg-gray-100" size="sm"
-                                                    onClick={() => handleChangeCantidad(item.id, item.cantidad + 1)}
+                            onClick={() => {
+                              handleSumarUno(item);
+                            }}
 >
                                 <Plus className="h-4 w-4 stroke-2 stroke-black" />
                             </IconButton>
@@ -240,7 +286,8 @@ const Productos = ({ carritoId, onNextStep, descuento, setDescuento , total, set
                         <td className="py-4 border-b border-slate-600  text-center cursor-pointer ">
                           <Trash2
                             className="stroke-red-600 w-8 h-18"
-                            onClick={() => handleEliminarItem(item.id)}
+                              onClick={() => handleEliminarItem(item.id, item)}
+
                           />
                         </td>
                         </tr>

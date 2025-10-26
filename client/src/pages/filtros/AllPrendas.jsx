@@ -90,7 +90,7 @@ React.useEffect(() => {
         !selectedDescuento;
 
       if (noFiltros) {
-        const res = await fetch(`http://127.0.0.1:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`);
+        const res = await fetch(`http://localhost:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`);
         const data = await res.json();
         if (data.object) setProductos(data.object);
         else setProductos([]);
@@ -98,7 +98,7 @@ React.useEffect(() => {
       }
 
       // Si hay algún filtro, usa la API filtrada
-      const res = await fetch(`http://127.0.0.1:8080/api/v1/todas-prendas-filtradas?${params.toString()}`);
+      const res = await fetch(`http://localhost:8080/api/v1/todas-prendas-filtradas?${params.toString()}`);
       console.log(res.url);
       const data = await res.json();
 
@@ -123,21 +123,21 @@ React.useEffect(() => {
 
     if (genero) {
         
-      fetch(`http://127.0.0.1:8080/api/v1/prendas/tallas-por-genero/${genero}`)
+      fetch(`http://localhost:8080/api/v1/prendas/tallas-por-genero/${genero}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.object) setTallas(data.object);
         })
         .catch(() => setTallas([]));
 
-      fetch(`http://127.0.0.1:8080/api/v1/prendas/marcas-por-genero/${genero}`)
+      fetch(`http://localhost:8080/api/v1/prendas/marcas-por-genero/${genero}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.object) setMarcas(data.object);
         })
         .catch(() => setMarcas([]));
 
-        fetch(`http://127.0.0.1:8080/api/v1/prendas/categorias-por-genero/${genero}`)
+        fetch(`http://localhost:8080/api/v1/prendas/categorias-por-genero/${genero}`)
       .then(res => res.json())
       .then(data => {
         if (data.object && Array.isArray(data.object)) {
@@ -148,7 +148,7 @@ React.useEffect(() => {
       })
       .catch(() => setCategorias([]));
 
-                fetch(`http://127.0.0.1:8080/api/v1/prendas/estadisticas-precios-por-genero/${genero}`)
+                fetch(`http://localhost:8080/api/v1/prendas/estadisticas-precios-por-genero/${genero}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.object && Array.isArray(data.object[0])) {
@@ -173,7 +173,7 @@ React.useEffect(() => {
           .catch(() => setRangosPrecios([]));
 
 
-          fetch(`http://127.0.0.1:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`)
+          fetch(`http://localhost:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.object) setProductos(data.object);
@@ -186,7 +186,7 @@ React.useEffect(() => {
   // 3. Agrega este List.Item y Collapse donde quieras mostrar el filtro de descuentos
   React.useEffect(() => {
     if (genero) {
-      fetch(`http://127.0.0.1:8080/api/v1/prendas/descuentos-por-genero/${genero}`)
+      fetch(`http://localhost:8080/api/v1/prendas/descuentos-por-genero/${genero}`)
         .then((res) => res.json())
         .then((data) => {
           // Suponiendo que data.object es un array de descuentos aplicados
@@ -212,7 +212,7 @@ React.useEffect(() => {
 React.useEffect(() => {
   const query = busqueda.trim();
   if (!query) {
-     fetch(`http://127.0.0.1:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`)
+     fetch(`http://localhost:8080/api/v1/prendas/descuentos-aplicados-por-genero/${genero}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.object) setProductos(data.object);
@@ -228,7 +228,7 @@ React.useEffect(() => {
       nombre: query,
       genero: genero,
     });
-    fetch(`http://127.0.0.1:8080/api/v1/prendas/buscar-por-nombre-genero?${params.toString()}`, {
+    fetch(`http://localhost:8080/api/v1/prendas/buscar-por-nombre-genero?${params.toString()}`, {
       signal: controller.signal,
     })
       .then(res => res.json())
@@ -247,7 +247,7 @@ React.useEffect(() => {
   };
 }, [busqueda, genero]);
 
-  const url = "http://127.0.0.1:8080/";
+  const url = "http://localhost:8080/";
     return (
       <div className="w-full flex flex-col gap-5">
         <WhatsAppButton />
@@ -738,7 +738,7 @@ React.useEffect(() => {
                     <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 relative z-0">
                         {productos.map((producto) => (
                             <Card key={producto.id} className=" flex flex-col items-start shadow-md  rounded-none relative ">
-                               <a className="relative group  mb-2 "  href={`/${genero}/${categoria}/${producto.id}/${producto.descuentoAplicado}`}>
+                               <a className="relative group  mb-2 "  href={`/${genero}/${producto.categoria}/${producto.id}/${producto.descuentoAplicado}`}>
                                     <img
                                     src={url + producto.imagenPrincipal}
                                     alt={producto.nombre}

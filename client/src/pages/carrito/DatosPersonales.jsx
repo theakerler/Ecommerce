@@ -80,7 +80,7 @@ const DatosPersonales = ({ datos, setDatos, onContinuar, carritoId, ventaId, set
       try {
         // 1. Obtener el usuarioId
         const token = localStorage.getItem("accessToken");
-        const userRes = await axios.get("http://127.0.0.1:8080/usuario-id", {
+        const userRes = await axios.get("http://localhost:8080/usuario-id", {
           headers: { Authorization: `Bearer ${token}` }
         });
         const usuarioId = userRes.data; // asume que es solo el número

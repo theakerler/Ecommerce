@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../../components/navbaar/NavBar';
 import NavBarResponsive from '../../components/navbaar/NavBarResponsive';
 import img from "../../assets/images/img.gif";
@@ -16,6 +16,8 @@ import WhatsAppButton from "../../components/contact/WhatsAppButton";
 
 const PrendaDetails = () => {
   const { id,descuento } = useParams(); // Obtener el ID de la prenda desde la URL
+    const location = useLocation();
+
   const [prenda, setPrenda] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imagen, setImagen] = useState(''); // Estado para la imagen principal
@@ -28,6 +30,22 @@ const PrendaDetails = () => {
 
   
   const navigate = useNavigate();
+
+    // Extraer información de la URL para el breadcrumb
+  const getUrlInfo = () => {
+    const pathSegments = location.pathname.split('/').filter(segment => segment !== '');
+    // Esperamos una URL como /mujer/Casacas/7/20 o similar
+    const genero = pathSegments[0] || '';
+    const categoria = pathSegments[1] || '';
+    
+    return {
+      genero: genero.charAt(0).toUpperCase() + genero.slice(1), // Capitalizar primera letra
+      categoria: categoria.charAt(0).toUpperCase() + categoria.slice(1) // Capitalizar primera letra
+    };
+  };
+
+  const { genero, categoria } = getUrlInfo();
+
   // Función para verificar si hay usuario logeado
   const isUserLoggedIn = () => {
     // Ejemplo: verifica si hay un token en localStorage (ajusta según tu auth)
@@ -37,10 +55,10 @@ const PrendaDetails = () => {
   useEffect(() => {
     const fetchPrenda = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8080/api/v1/prenda/${id}`);
+        const response = await fetch(`http://localhost:8080/api/v1/prenda/${id}`);
         const data = await response.json();
         setPrenda(data.object);
-                setImagen(`http://127.0.0.1:8080/${data.object.imagen.principal}`); // Imagen inicial
+                setImagen(`http://localhost:8080/${data.object.imagen.principal}`); // Imagen inicial
 
         setLoading(false);
       } catch (error) {
@@ -85,7 +103,7 @@ const handleAddToCart = async () => {
     if (!token) throw new Error("No hay token de acceso");
 
     // 1. Obtener usuarioId
-    const userRes = await axios.get("http://127.0.0.1:8080/usuario-id", {
+    const userRes = await axios.get("http://localhost:8080/usuario-id", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const usuarioId = userRes.data;
@@ -93,7 +111,7 @@ const handleAddToCart = async () => {
       let carritoId;
       let tituloCarrito = "";
     const abiertoRes = await axios.get(
-      `http://127.0.0.1:8080/api/v1/carrito/abierto/usuario/${usuarioId}`
+      `http://localhost:8080/api/v1/carrito/abierto/usuario/${usuarioId}`
     );
    if (abiertoRes.data.object && abiertoRes.data.object.length > 0) {
   carritoId = abiertoRes.data.object[0].id;
@@ -102,7 +120,7 @@ const handleAddToCart = async () => {
 } else {
       // Si no hay, crear uno nuevo
       const carritoRes = await axios.post(
-        "http://127.0.0.1:8080/api/v1/carrito",
+        "http://localhost:8080/api/v1/carrito",
         { usuarioId, estado: "ABIERTO" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -116,7 +134,7 @@ localStorage.setItem('carritoId', carritoId);
 
     // 1. Intentar incrementar cantidad si el item ya existe
     await axios.post(
-      "http://127.0.0.1:8080/api/v1/carrito-item/agregar",
+      "http://localhost:8080/api/v1/carrito-item/agregar",
       null,
       {
         params: {
@@ -133,12 +151,13 @@ localStorage.setItem('carritoId', carritoId);
       timer: 1500,
     });
 
+
   } catch (error) {
      // Si no existe el item, lo creamos
         const selectedTallaObj = prenda.tallas.find(t => t.talla.id === selectedTalla);
     const tallaNombre = selectedTallaObj ? selectedTallaObj.talla.nomTalla : "";
     await axios.post(
-      "http://127.0.0.1:8080/api/v1/carrito-item",
+      "http://localhost:8080/api/v1/carrito-item",
       {
         carritoId,
         prendaId: Number(id),
@@ -148,7 +167,7 @@ localStorage.setItem('carritoId', carritoId);
       },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-
+    handleRestarUno(id, selectedTalla);
     Swal.fire({
       icon: 'success',
       title: 'Producto agregado al carrito',
@@ -158,7 +177,7 @@ localStorage.setItem('carritoId', carritoId);
   }
   // ACTUALIZA EL CONTADOR DEL CARRITO AQUÍ
     const cantidadRes = await axios.get(
-      `http://127.0.0.1:8080/api/v1/carrito/${carritoId}/cantidad-items`
+      `http://localhost:8080/api/v1/carrito/${carritoId}/cantidad-items`
     );
     console.log("Cantidad de items en el carrito:", cantidadRes.data);
     // Si tu backend responde { cantidad: 3 }, usa cantidadRes.data.cantidad
@@ -177,6 +196,22 @@ window.dispatchEvent(new Event('cart-updated'));
   }
 };
 
+const handleRestarUno = async (id, selectedTalla) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/v1/restar-uno?prendaId=${id}&tallaId=${selectedTalla}`,
+      { method: "PUT" }
+    );
+    const data = await res.json();
+    if (!res.ok || !data.object) {
+      Swal.fire("Sin stock", data.mensaje || "No hay stock suficiente.", "warning");
+      return;
+    }
+  } catch (e) {
+    Swal.fire("Error", "No se pudo actualizar el stock.", "error");
+  }
+};
+
  return (
     <>
     <div className='h-full  flex flex-col gap-10 '>
@@ -191,10 +226,10 @@ window.dispatchEvent(new Event('cart-updated'));
                     <House />
                 </Breadcrumb.Link>
                 <Breadcrumb.Separator />
-                <Breadcrumb.Link href="#" className="text-lg text-gray-400">Mujer</Breadcrumb.Link>
+                <Breadcrumb.Link href="#" className="text-lg text-gray-400">{genero}</Breadcrumb.Link>
                 <Breadcrumb.Separator />
                 <Breadcrumb.Link href="#" className="text-lg ">
-                    Casacas Mujer
+                    {categoria} {genero}
                 </Breadcrumb.Link>
             </Breadcrumb>
         </div>
@@ -208,11 +243,11 @@ window.dispatchEvent(new Event('cart-updated'));
                         <div
                             className="  cursor-pointer w-full h-auto"
                             onClick={() =>
-                                setImagen(`http://127.0.0.1:8080/${prenda.imagen.principal}`)
+                                setImagen(`http://localhost:8080/${prenda.imagen.principal}`)
                             }
                             >
                             <img
-                                src={`http://127.0.0.1:8080/${prenda.imagen.principal}`}
+                                src={`http://localhost:8080/${prenda.imagen.principal}`}
                                 className=' object-contain w-full h-auto'
                                 alt={prenda.nombre}
                             />
@@ -221,7 +256,7 @@ window.dispatchEvent(new Event('cart-updated'));
                         {prenda.imagen.video && (
                         <div className="  cursor-pointer w-full h-auto"
                         onClick={() =>
-                            setImagen(`http://127.0.0.1:8080/${prenda.imagen.video}`)
+                            setImagen(`http://localhost:8080/${prenda.imagen.video}`)
                             }>
                             <img src={img} alt="GIF de ejemplo" className=" object-contain w-full h-auto"
                             />
@@ -231,11 +266,11 @@ window.dispatchEvent(new Event('cart-updated'));
                         <div
                             className="  cursor-pointer w-full h-auto"
                             onClick={() =>
-                                setImagen(`http://127.0.0.1:8080/${prenda.imagen.hover}`)
+                                setImagen(`http://localhost:8080/${prenda.imagen.hover}`)
                             }
                         >
                             <img
-                                src={`http://127.0.0.1:8080/${prenda.imagen.hover}`}
+                                src={`http://localhost:8080/${prenda.imagen.hover}`}
                                 className=' object-contain w-full h-auto'
                                 alt={`${prenda.nombre} hover`}
                             />
@@ -244,11 +279,11 @@ window.dispatchEvent(new Event('cart-updated'));
                         <div
                             className="  cursor-pointer w-full h-auto"
                             onClick={() =>
-                            setImagen(`http://127.0.0.1:8080/${prenda.imagen.img1}`)
+                            setImagen(`http://localhost:8080/${prenda.imagen.img1}`)
                             }
                         >
                             <img
-                            src={`http://127.0.0.1:8080/${prenda.imagen.img1}`}
+                            src={`http://localhost:8080/${prenda.imagen.img1}`}
                                         className=' object-contain w-full h-auto'
                             alt={`${prenda.nombre} secundaria`}
                             />
@@ -257,11 +292,11 @@ window.dispatchEvent(new Event('cart-updated'));
                         <div
                             className="  cursor-pointer w-full h-auto"
                             onClick={() =>
-                            setImagen(`http://127.0.0.1:8080/${prenda.imagen.img2}`)
+                            setImagen(`http://localhost:8080/${prenda.imagen.img2}`)
                             }
                         >
                             <img
-                            src={`http://127.0.0.1:8080/${prenda.imagen.img2}`}
+                            src={`http://localhost:8080/${prenda.imagen.img2}`}
                                         className=' object-contain w-full h-auto'
                             alt={`${prenda.nombre} secundaria`}
                             />

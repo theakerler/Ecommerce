@@ -34,7 +34,7 @@ const [loadingUser, setLoadingUser] = useState(true);
 useEffect(() => {
   const accessToken = localStorage.getItem('accessToken');
   if (accessToken) {
-    axios.get('http://localhost:8080/usuario', {
+    axios.get('http://localhost:8080/usuarios', {
       headers: { Authorization: `Bearer ${accessToken}` }
     })
     .then(res => setUser(res.data))
